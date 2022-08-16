@@ -1,0 +1,10 @@
+#
+#Thu Sep 15 05:58:24 CEST 2016
+operators=-~rectangle~*~/~count~\=~.~length~one_of~where~empty~circle~triangle~?~\:~point~+~as~pyramid~sphere~with_min_of~distance_to~closest_to~neighbors_at~rnd~square~cylinder~among~mod
+plugins=msi.gama.core~ummisco.gama.opengl
+attributes=x~y~width
+statements=init~set~reflex~let~if~else~ask~aspect~draw~create~write~do~output~display~display_grid~display_population~chart~data~action~save~exhaustive~permanent
+skills=reflex~grid
+constants=m~lightblue~blue~purple~darkblue~white~red~green~black
+types=string~list~int~unknown~geometry~point~agent~rgb~float~bool~date~container
+actions=debug~error~tell~write~die~_init_~_step_~halt~pause

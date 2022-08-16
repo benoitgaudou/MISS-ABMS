@@ -1,0 +1,9 @@
+#
+#Tue Sep 13 16:12:52 CEST 2016
+operators=-~rectangle~*~one_of~.~circle~rnd_color~neighbors_at~as~among~/~length~\=
+plugins=msi.gama.core
+statements=init~set~aspect~draw~ask~if~else~create~output~display~display_grid~display_population
+skills=reflex~grid
+constants=m~white~green~red~black
+types=string~list~int~unknown~geometry~point~agent~rgb~float~bool~date~container
+actions=debug~error~tell~write~die~_init_~_step_~halt~pause

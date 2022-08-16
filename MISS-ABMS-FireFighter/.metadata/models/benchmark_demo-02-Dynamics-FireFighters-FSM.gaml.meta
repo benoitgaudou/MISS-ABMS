@@ -1,0 +1,10 @@
+#
+#Wed Sep 14 06:47:16 CEST 2016
+architectures=fsm
+operators=-~rectangle~*~one_of~.~where~\=~empty~\!\=~circle~neighbors_at~as~among~/~length~+
+plugins=msi.gama.core
+statements=init~set~state~let~if~else~transition~ask~aspect~draw~reflex~create~write~do~output~display~display_grid~display_population
+skills=reflex~fsm~grid
+constants=m~lightblue~blue~white~red~green~black
+types=string~list~int~unknown~geometry~point~agent~rgb~float~bool~date~container
+actions=debug~error~tell~write~die~_init_~_step_~halt~pause

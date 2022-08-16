@@ -1,0 +1,9 @@
+#
+#Thu Sep 15 05:49:04 CEST 2016
+operators=-~rectangle~*~one_of~.~where~\=~empty~circle~with_min_of~distance_to~closest_to~neighbors_at~as~among~/~length~+
+plugins=msi.gama.core
+statements=init~set~reflex~let~if~else~ask~aspect~draw~create~write~do~output~display~display_grid~display_population
+skills=reflex~grid
+constants=m~lightblue~blue~darkblue~white~red~green~black
+types=string~list~int~unknown~geometry~point~agent~rgb~float~bool~date~container
+actions=debug~error~tell~write~die~_init_~_step_~halt~pause
