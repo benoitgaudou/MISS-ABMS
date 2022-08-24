@@ -44,9 +44,6 @@ species firefighter skills:[moving] {
 	string status <- "patrolling" among: ["patrolling", "fighting fire"];		
 	
 	plot my_plot;
-	plot target_plot;
-	
-	float speed <- 10#km/#h;
 	
 	init {
 		my_plot <- one_of(plot where each.isEmpty());
@@ -55,23 +52,16 @@ species firefighter skills:[moving] {
 	
 	reflex patrol when:status = "patrolling" {
 		
-		// Look at fire around
 		list<plot> burning_plots <- my_plot.neighbors where (each.state="fire");
-		
-		// Move toward fire on sight
-		if not(empty(burning_plots)) { target_plot <- one_of(burning_plots); }
 		// If no fire on sight move toward any neighboring places
-		if target_plot = nil {target_plot <- one_of(my_plot.neighbors where each.isEmpty());}
-		
-		// Move toward destination
-		do goto target:target_plot;
+		if empty(burning_plots) { my_plot <- one_of(my_plot.neighbors where each.isEmpty()); }
+		// Else move toward fire on sight
+		else { my_plot <- one_of(burning_plots); }
 		
 		// Update current position
-		my_plot <- first(plot overlapping self);
+		location <- my_plot.location;
 		// If current position is on fire then move to "fighting fire" status
 		if my_plot.state="fire" {status <- "fighting fire";}
-		// If target reached then no more target
-		if my_plot=target_plot {target_plot <- nil;}
 		
 	}
 	
