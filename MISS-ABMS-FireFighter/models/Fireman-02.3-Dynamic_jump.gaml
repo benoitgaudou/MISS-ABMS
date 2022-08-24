@@ -2,6 +2,8 @@ model firemen
 
 global { 
 	
+	float prop_forest <- 1.0;
+	
 	int scenario <- 1 among: [1,2] parameter:true; // 0: without communication, 1: with communication
 	int snb_fire <- 1 min:1 max:10 parameter:true;
 	geometry shape <- square(3000#m);
@@ -10,7 +12,7 @@ global {
 		// plot (the name of the plot agent species) 
 		// can also be used as the list of all the plot agents
 		// length
-		ask ((length(plot)/2) among plot) {
+		ask ((length(plot)*prop_forest) among plot) {
 			state <- "forest";
 			color <- #green;
 		}
@@ -33,7 +35,7 @@ grid plot height:30 width: 30 neighbors:4 schedules:plot where (each.state="fire
 	rgb color <- #white;
 	
 	// Spread the fire
-	reflex fireSpreading when: state="fire" {
+	reflex fireSpreading {
 		ask neighbors where (each.state="forest") { state<-"fire"; color<-#red; }
 	}
 	

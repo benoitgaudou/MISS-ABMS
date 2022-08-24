@@ -33,7 +33,7 @@ grid plot height:30 width: 30 neighbors:4 schedules:plot where (each.state="fire
 	rgb color <- #white;
 	
 	// Spread the fire
-	reflex fireSpreading when: state="fire" {
+	reflex fireSpreading {
 		ask neighbors where (each.state="forest") { state<-"fire"; color<-#red; }
 	}
 	
