@@ -54,15 +54,21 @@ species firefighter skills:[moving] {
 	
 	reflex patrol when:status = "patrolling" {
 		
-		list<plot> burning_plots <- my_plot.neighbors where (each.state="fire");
-		// If no fire on sight move toward any neighboring places
-		if empty(burning_plots) { my_plot <- one_of(my_plot.neighbors where each.isEmpty()); }
-		// Else move toward fire on sight
-		else { my_plot <- one_of(burning_plots); }
+		// Move to the next patrolling plot
+		plot target_plot <- next_burning_plot_target();
 		
-		// Update current position
+		// If no patrol plot target, move randomly
+		if target_plot=nil {
+			list<plot> empty_plots <- my_plot.neighbors where each.isEmpty();  
+			target_plot <- empty(empty_plots) ? my_plot : any(empty_plots);
+		}
+		
+		// Change current plot
+		my_plot <- target_plot;
+		// Update actual position
 		location <- my_plot.location;
-		// If current position is on fire then move to "fighting fire" status
+		
+		// If current plot is on fire then move to "fighting fire" status
 		if my_plot.state="fire" {status <- "fighting fire";}
 		
 	}
@@ -74,22 +80,43 @@ species firefighter skills:[moving] {
 		
 	} 
 	
+	/*
+	 * The action to choose a target burning plot
+	 */
+	plot next_burning_plot_target {
+		return one_of( my_plot.neighbors where (each.state="fire") );
+	}
+	
 	aspect circle {
 		 draw circle(50#m) color: #blue;
 	}	
 }
 
 species communicant_firefighter parent:firefighter {
+	
 	list<communicant_firefighter> colleagues  <- (communicant_firefighter - self);
+
+	plot next_burning_plot_target {
+		// Look around
+		list<plot> burning_plots <- my_plot.neighbors where (each.state="fire");
+		// If there is fire around go to any of them
+		if not(empty(burning_plots)) { return any(burning_plots); }
+		// Else ask collueages for know fire plots
+		else { burning_plots <- colleagues accumulate (each.my_plot.neighbors where (each.state="fire")); }
+		// If none return no burning plot
+		if empty(burning_plots) { return nil; }
+		// If there is one, pick the closest ...
+		plot target <- burning_plots closest_to self;
+		// ... and choose the neighbore plots closest to it
+		return my_plot.neighbors with_min_of (each distance_to target);
+	}
 
 	aspect circle {
 		 draw circle(50#m) color: #purple;
 	}	
 }
 
-species brigade {
-	list<firefighter> members <- list(firefighter);
-}
+species brigade { list<communicant_firefighter> members; }
 
 
 experiment myFirstVizu type: gui {
