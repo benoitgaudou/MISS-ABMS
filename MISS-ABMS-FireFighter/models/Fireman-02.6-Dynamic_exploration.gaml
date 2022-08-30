@@ -158,3 +158,21 @@ experiment myFirstVizu type: gui {
 	}	
 	
 }
+
+experiment myFirstAnalysis type:batch until:plot none_matches (each.state="fire") repeat:40 {
+	
+	parameter teams var:nbb among:[1,2,3,4,6];
+	parameter sce var:scenario init:"teaming" among:["teaming"];
+	
+	method exhaustive;
+	
+	permanent { 
+		display team background: #white {
+		    chart "Plain forest" type: series x_serie_labels:[1,2,3,4,6] {
+		        data "Forest" value: mean(simulations collect (each.plot count (each.state="forest")))  
+		        	y_err_values:standard_deviation(simulations collect (each.plot count (each.state="forest")))/sqrt(10);
+		    }
+	    }
+	} 
+	
+}
