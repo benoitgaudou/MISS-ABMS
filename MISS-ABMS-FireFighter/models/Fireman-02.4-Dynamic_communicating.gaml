@@ -101,13 +101,13 @@ species communicant_firefighter parent:firefighter {
 		list<plot> burning_plots <- my_plot.neighbors where (each.state="fire");
 		// If there is fire around go to any of them
 		if not(empty(burning_plots)) { return any(burning_plots); }
-		// Else ask collueages for know fire plots
+		// Else ask colleagues if any fire surround them
 		else { burning_plots <- colleagues accumulate (each.my_plot.neighbors where (each.state="fire")); }
-		// If none return no burning plot
+		// If none return a burning plot, don't worry stop happy
 		if empty(burning_plots) { return nil; }
-		// If there is one, pick the closest ...
+		// If there is at least one, pick the closest ...
 		plot target <- burning_plots closest_to self;
-		// ... and choose the neighbore plots closest to it
+		// ... and choose the closest plot to this fire among the neighboor plots
 		return my_plot.neighbors with_min_of (each distance_to target);
 	}
 

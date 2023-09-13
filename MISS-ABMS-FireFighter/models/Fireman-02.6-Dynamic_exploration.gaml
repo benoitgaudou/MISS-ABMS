@@ -2,9 +2,10 @@ model firemen
 
 global { 
 	
-	float prop_forest <- 0.7 parameter:true;
+	float prop_forest <- 0.6 parameter:true;
 	
-	string scenario <- "individual" among: ["individual","communicating","teaming"] parameter:true; 
+	int scenar <- 0;
+	string scenario <- "teaming" among: ["individual","communicating","teaming"] parameter:true; 
 	int snb_fire <- 1 min:1 max:10 parameter:true;
 	
 	int nbf <- 10 min:4 max:50 parameter:true;
@@ -12,9 +13,15 @@ global {
 	
 	list<rgb> brigade_colors <- [#purple,#lime,#cyan,#slategray,#darkred,#peru,#plum,#gold,#pink,#black];
 	
-	geometry shape <- square(3000#m);
+	int forest_saved -> plot count (each.state="forest");
+	
+	float sizeofworld <- 3000#m;
+	shape_file my_shapefile;
+	bool sensitivty_analysis <- true parameter:true;
+	geometry shape <- sensitivty_analysis ? square(200#m) : envelope(my_shapefile);
 	
 	init {
+		scenario <- ["individual","communicating","teaming"][scenar];
 		// plot (the name of the plot agent species) 
 		// can also be used as the list of all the plot agents
 		// length
@@ -64,7 +71,7 @@ grid plot height:30 width: 30 neighbors:4 schedules:plot where (each.state="fire
 	bool isEmpty { return empty(firefighter overlapping self); }
 }
 
-species firefighter skills:[moving] {
+species firefighter {
 	string status <- "patrolling" among: ["patrolling", "fighting fire"];		
 	
 	plot my_plot;
@@ -149,6 +156,8 @@ species brigade {
 
 experiment myFirstVizu type: gui {
 	
+	init { minimum_cycle_duration <- 0.2; }
+	
 	output {
 		display vizu {
 			grid plot border: #black;
@@ -159,16 +168,23 @@ experiment myFirstVizu type: gui {
 	
 }
 
+experiment sobol type:batch until:plot none_matches (each.state="fire") {
+	//parameter teams var:nbb min:1 max:6;
+	parameter scenar var:scenar min:0 max:2;
+	parameter forest var:prop_forest min:0.5 max:0.9;
+	method sobol outputs:["forest_saved"] sample:100 report:"Results/sobol_comm.txt" results:"Results/sobol_raw_comm.csv";
+}
+
 experiment myFirstAnalysis type:batch until:plot none_matches (each.state="fire") repeat:40 {
 	
 	parameter teams var:nbb among:[1,2,3,4,6];
 	parameter sce var:scenario init:"teaming" among:["teaming"];
 	
-	method exhaustive;
+	method exploration;
 	
 	permanent { 
 		display team background: #white {
-		    chart "Plain forest" type: series x_serie_labels:[1,2,3,4,6] {
+		    chart "Plain forest" type: series x_serie_labels:[1,2,3,4,6] x_label:"Number of teams"{
 		        data "Forest" value: mean(simulations collect (each.plot count (each.state="forest")))  
 		        	y_err_values:standard_deviation(simulations collect (each.plot count (each.state="forest")))/sqrt(10);
 		    }

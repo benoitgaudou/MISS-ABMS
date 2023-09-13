@@ -42,7 +42,7 @@ grid plot height:30 width: 30 neighbors:4 schedules:plot where (each.state="fire
 	bool isEmpty { return empty(firefighter overlapping self); }
 }
 
-species firefighter skills:[moving] {
+species firefighter {
 	string status <- "patrolling" among: ["patrolling", "fighting fire"];		
 	
 	plot my_plot;

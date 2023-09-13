@@ -5,7 +5,7 @@ global {
 	float prop_forest <- 0.7 parameter:true;
 	
 	string scenario <- "individual" among: ["individual","communicating","teaming"] parameter:true; 
-	int snb_fire <- 1 min:1 max:10 parameter:true;
+	int snb_fire <- 1 min:1 max:10 parameter:true category:initialization;
 	
 	int nbf <- 10 min:4 max:50 parameter:true;
 	int nbb <- 2 min:2 max:10 parameter:true;
@@ -64,7 +64,7 @@ grid plot height:30 width: 30 neighbors:4 schedules:plot where (each.state="fire
 	bool isEmpty { return empty(firefighter overlapping self); }
 }
 
-species firefighter skills:[moving] {
+species firefighter {
 	string status <- "patrolling" among: ["patrolling", "fighting fire"];		
 	
 	plot my_plot;

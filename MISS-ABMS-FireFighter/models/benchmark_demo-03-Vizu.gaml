@@ -207,11 +207,12 @@ experiment expWithoutParam type: gui {
 experiment explo type: batch until: empty(plot where (each.state = 'fire')) repeat: 10 {
 	parameter "scenario" var: scenario;
 	
-	method exhaustive;
+	method exploration;
 	
 	int cpt <- 0;
 	action _step_ {
 		// scenario, replication, rateForest, cycle
+		write "OK";
 		save [scenario, cpt mod 10, rateForest, cycle] to: "firefighter.csv" type:"csv";
 		cpt <- cpt + 1;
 	}
